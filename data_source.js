@@ -8,7 +8,7 @@ FireCore.DataSource = SC.DataSource.extend({
     var app = this.get('firebaseApp');
 
     return new Firebase('https://%@.firebaseio.com/'.fmt(app));
-  }.property('firebaseApp'),
+  }.property('firebaseApp').cacheable(),
 
   fetch: function(store, query) {
     var firebase = this.get('firebase'),
@@ -71,7 +71,7 @@ FireCore.DataSource = SC.DataSource.extend({
   retrieveRecords: function(store, keys) {
     var firebase = this.get('firebase'),
         self = this,
-        type, name, id, hash, ref;
+        type, name, id, hash, status, ref;
 
     keys.forEach(function(key, index) {
       type = store.recordTypeFor(key);
@@ -81,12 +81,19 @@ FireCore.DataSource = SC.DataSource.extend({
 
       ref.once('value', function(snapshot) {
         hash = self.cleanObject(snapshot.val());
+        status = store.readStatus(key);
 
         SC.run(function() {
-          store.pushRetrieve(type, id, hash);
+          if (status == SC.Record.BUSY_LOADING) {
+            store.dataSourceDidComplete(key, hash, id);
+          } else {
+            store.pushRetrieve(type, id, hash);
+          }
         });
       });
     });
+
+    return YES;
   },
 
   commitRecords: function(store, createKeys, updateKeys, destroyKeys, params) {
