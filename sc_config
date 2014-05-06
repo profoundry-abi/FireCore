@@ -1,0 +1,5 @@
+console.log(' *** Adding FireCore as framework...');
+BT.addFramework(BT.Framework.extend({
+  ref: 'firecore',
+  path: dirname()
+}));
