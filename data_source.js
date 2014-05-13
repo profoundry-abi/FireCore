@@ -1,3 +1,5 @@
+sc_require('firebase');
+
 FireCore.DataSource = SC.DataSource.extend({
 
   _createdIdsToIgnore: [],
