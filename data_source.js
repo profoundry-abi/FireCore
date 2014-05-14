@@ -146,7 +146,11 @@ FireCore.DataSource = SC.DataSource.extend({
   },
 
   firebaseReferenceNameFor: function(type) {
-    return (type.toString().split('.')[1]).decamelize().pluralize();
+    if (SC.none(type) || SC.none(type.typeName) || SC.empty(type.typeName)) {
+      throw new Error("SC.Records must provide a typeName property to be compatible with FireCore.");
+    }
+
+    return type.typeName.decamelize().pluralize();
   },
 
   scTypeNameFromSnapshot: function(snapshot) {
