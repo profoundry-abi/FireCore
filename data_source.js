@@ -109,8 +109,14 @@ FireCore.DataSource = SC.DataSource.extend({
       hash = self.cleanObject(store.readDataHash(key));
       ref = firebase.child(name);
 
-      newRef = ref.push();
-      id = newRef.name();
+      // Allow the user to specify an ID (TODO: check the primaryKey field)
+      if (hash.guid) {
+        newRef = ref.child(hash.guid);
+        id = hash.guid;
+      } else {
+        newRef = ref.push();
+        id = newRef.name();
+      }
 
       // Ignore this ID in child_added calls so
       // we don't add it twice
