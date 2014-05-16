@@ -126,7 +126,7 @@ FireCore.DataSource = SC.DataSource.extend({
       newRef.set(hash);
 
       // Then notify the store
-      store.dataSourceDidComplete(key, hash, id);
+      SC.run(function() { store.dataSourceDidComplete(key, hash, id); });
     });
 
     updateKeys.forEach(function(key) {
@@ -137,7 +137,7 @@ FireCore.DataSource = SC.DataSource.extend({
       ref = firebase.child(name).child(id);
 
       ref.set(hash);
-      store.dataSourceDidComplete(key, hash, id);
+      SC.run(function() { store.dataSourceDidComplete(key, hash, id); });
     });
 
     destroyKeys.forEach(function(key) {
@@ -147,7 +147,7 @@ FireCore.DataSource = SC.DataSource.extend({
       ref = firebase.child(name).child(id);
 
       ref.remove();
-      store.dataSourceDidDestroy(key);
+      SC.run(function() { store.dataSourceDidDestroy(key); });
     });
   },
 
