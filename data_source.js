@@ -142,8 +142,8 @@ FireCore.DataSource = SC.DataSource.extend({
 
     destroyKeys.forEach(function(key) {
       type = store.recordTypeFor(key);
+      id = store.idFor(key);
       name = self.firebaseReferenceNameFor(type);
-      id = record.get('id');
       ref = firebase.child(name).child(id);
 
       ref.remove();
